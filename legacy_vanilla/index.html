@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Topology Designer & Simulator</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fira+Code&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Top Navigation / Toolbar -->
+        <header class="top-nav">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                NetSim
+            </div>
+            <div class="toolbar">
+                <button class="tool-btn active" id="btn-select" title="Select / Move (Esc)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>
+                </button>
+                <button class="tool-btn" id="btn-connect" title="Connect Cable">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34M9 16h1m-5 0h.5"/></svg>
+                </button>
+                <button class="tool-btn text-danger" id="btn-delete" title="Delete Selected (Del)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
+                <div class="divider"></div>
+                <button class="tool-btn simulate-btn" id="btn-ping" title="Send Ping">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Ping Tool
+                </button>
+            </div>
+            
+            <div class="presets-dropdown">
+                <select id="preset-selector">
+                    <option value="">Load Demo...</option>
+                    <option value="simple-lan">Simple LAN</option>
+                    <option value="inter-vlan">Inter-Subnet Routing</option>
+                    <option value="star">Star Topology</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Main Workspace Area -->
+        <main class="workspace">
+            <!-- Left Sidebar: Device Catalog -->
+            <aside class="catalog-sidebar">
+                <h3>Devices</h3>
+                <div class="device-list">
+                    <div class="device-item" draggable="true" data-type="pc">
+                        <div class="device-icon pc-icon">💻</div>
+                        <span>PC</span>
+                    </div>
+                    <div class="device-item" draggable="true" data-type="server">
+                        <div class="device-icon server-icon">🖥️</div>
+                        <span>Server</span>
+                    </div>
+                    <div class="device-item" draggable="true" data-type="switch">
+                        <div class="device-icon switch-icon">🔀</div>
+                        <span>Switch</span>
+                    </div>
+                    <div class="device-item" draggable="true" data-type="router">
+                        <div class="device-icon router-icon">🌐</div>
+                        <span>Router</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Canvas Container -->
+            <div class="canvas-container" id="canvas-container">
+                <canvas id="network-canvas"></canvas>
+            </div>
+
+            <!-- Right Sidebar: Properties -->
+            <aside class="properties-sidebar hidden" id="properties-sidebar">
+                <h3>Properties</h3>
+                <div id="properties-content">
+                    <p class="text-muted">Select a node or link</p>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Bottom Console Log -->
+        <footer class="console-drawer">
+            <div class="console-header" id="console-header">
+                <span>Terminal / Event Log</span>
+                <button id="btn-clear-log" class="small-btn">Clear</button>
+            </div>
+            <div class="console-output" id="console-output">
+                <div class="log-entry sys-log">System initialized. Ready.</div>
+            </div>
+        </footer>
+    </div>
+    
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

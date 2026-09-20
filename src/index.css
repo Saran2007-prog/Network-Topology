@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+body {
+  color: #1e293b; /* text-slate-800 */
+  background-color: #f8fafc; /* bg-slate-50 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Custom styles for ReactFlow specific things to match Tinkercad */
+.react-flow__handle {
+  width: 0.75rem;
+  height: 0.75rem;
+  background-color: #94a3b8; /* bg-slate-400 */
+  border: 2px solid white;
+  border-radius: 9999px;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  z-index: 10;
+}
+
+.react-flow__handle:hover {
+  background-color: #3b82f6; /* bg-blue-500 */
+  transform: scale(1.25);
+}
+
+.react-flow__handle-connecting {
+  background-color: #3b82f6;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+
+.react-flow__edge-path {
+  stroke-linecap: round;
+}
+
+.react-flow__node {
+  border-radius: 0;
+  box-shadow: none;
+}
