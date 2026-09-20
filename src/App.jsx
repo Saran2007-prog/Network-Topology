@@ -48,6 +48,7 @@ function AppContent() {
         onSimulateToggle={handleSimulateToggle} 
         wireColor={wireColor}
         setWireColor={setWireColor}
+        addLog={addLog}
       />
       
       <div className="flex flex-1 overflow-hidden relative">

@@ -33,6 +33,47 @@ export default function Workspace({
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
+  // Add device helper (used by click-to-add as well as drag-and-drop)
+  const addDeviceToWorkspace = useCallback((type, clientPos = null) => {
+    let position = { x: 250 + (nodes.length * 20) % 200, y: 150 + (nodes.length * 20) % 200 };
+    if (clientPos && reactFlowWrapper.current) {
+      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+      position = {
+        x: clientPos.x - reactFlowBounds.left,
+        y: clientPos.y - reactFlowBounds.top,
+      };
+    }
+
+    const newNode = {
+      id: getId(),
+      type: 'device',
+      position,
+      data: { 
+        type, 
+        name: `${type.toUpperCase()}_${nodes.length + 1}`,
+        ip: ['pc', 'server', 'laptop', 'printer'].includes(type) ? `192.168.1.${10 + nodes.length}` : '',
+        gateway: ['pc', 'server', 'laptop', 'printer'].includes(type) ? '192.168.1.1' : '',
+        subnet: '255.255.255.0',
+        isPingSource: false,
+        pingResult: null,
+        isSimulating: isSimulating
+      },
+    };
+
+    setNodes((nds) => nds.concat(newNode));
+    addLog(`Added component: ${type.toUpperCase()}_${nodes.length + 1}`, 'info');
+  }, [nodes, setNodes, isSimulating, addLog]);
+
+  // Expose click-to-add for catalog items
+  React.useEffect(() => {
+    window.onAddComponentFromCatalog = (deviceId) => {
+      addDeviceToWorkspace(deviceId);
+    };
+    return () => {
+      delete window.onAddComponentFromCatalog;
+    };
+  }, [addDeviceToWorkspace]);
+
   // Handle Drag & Drop
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -46,31 +87,9 @@ export default function Workspace({
       const type = event.dataTransfer.getData('application/reactflow');
       if (!type) return;
 
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-      const position = {
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
-      };
-
-      const newNode = {
-        id: getId(),
-        type: 'device',
-        position,
-        data: { 
-          type, 
-          name: `${type.toUpperCase()}_${nodes.length + 1}`,
-          ip: ['pc', 'server'].includes(type) ? `192.168.1.${10 + nodes.length}` : '',
-          gateway: ['pc', 'server'].includes(type) ? '192.168.1.1' : '',
-          subnet: '255.255.255.0',
-          isPingSource: false,
-          pingResult: null,
-          isSimulating: isSimulating
-        },
-      };
-
-      setNodes((nds) => nds.concat(newNode));
+      addDeviceToWorkspace(type, { x: event.clientX, y: event.clientY });
     },
-    [nodes, setNodes, isSimulating]
+    [addDeviceToWorkspace]
   );
 
   // Sync isSimulating flag to nodes so they can change cursor

@@ -1,37 +1,62 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Handle, Position } from '@xyflow/react';
-import { Monitor, Server, GitMerge, Router } from 'lucide-react';
+import { DEVICE_CATALOG } from '../utils/networkCatalogData';
+import { Monitor } from 'lucide-react';
 
-const icons = {
-  pc: Monitor,
-  server: Server,
-  switch: GitMerge,
-  router: Router
-};
+export default function DeviceNode({ data, selected }) {
+  // Find catalog data
+  const catalogEntry = useMemo(() => {
+    return DEVICE_CATALOG.find(d => d.id === data.type || d.id === data.catalogId) || DEVICE_CATALOG[0];
+  }, [data.type, data.catalogId]);
 
-const colors = {
-  pc: 'border-blue-500 text-blue-600',
-  server: 'border-indigo-500 text-indigo-600',
-  switch: 'border-emerald-500 text-emerald-600',
-  router: 'border-orange-500 text-orange-600'
-};
+  const Icon = catalogEntry.icon || Monitor;
+  const colorClass = catalogEntry.color || 'bg-slate-100 text-slate-700 border-slate-500';
 
-export default function DeviceNode({ data, selected, type }) {
-  const Icon = icons[data.type] || Monitor;
-  const colorClass = colors[data.type] || 'border-slate-500 text-slate-600';
-
+  // Calculate Handles (Pins)
+  const ports = catalogEntry.ports || ['Eth0'];
+  
   return (
     <div className={`
-      relative bg-white rounded-lg shadow-md border-2 w-32 pb-2
-      transition-all duration-200 
+      relative bg-white rounded-lg shadow-sm border-2 w-32 pb-2
+      transition-all duration-200 group
       ${selected ? 'ring-4 ring-blue-200 border-blue-500 shadow-lg' : colorClass}
       ${data.isSimulating ? 'cursor-crosshair' : 'cursor-grab active:cursor-grabbing'}
     `}>
-      {/* Top Handles */}
-      <Handle type="target" position={Position.Top} id="top" className="!bg-slate-400 !w-3 !h-3 hover:!bg-blue-500 hover:!scale-125" />
       
+      {/* Dynamic Port Terminals based on device spec */}
+      {ports.map((portName, index) => {
+        // Distribute pins across top and bottom based on index
+        const isTop = index % 2 === 0;
+        const position = isTop ? Position.Top : Position.Bottom;
+        const offset = Math.floor(index / 2) * 20; // space them out
+        
+        return (
+          <div key={portName} className="group/pin">
+            <Handle 
+              type={isTop ? 'target' : 'source'} 
+              position={position} 
+              id={portName} 
+              style={{ left: `calc(50% + ${offset}px)` }}
+              className="!bg-slate-300 !w-3 !h-3 hover:!bg-blue-500 hover:!scale-125 hover:!z-50 transition-transform" 
+            />
+            {/* Tooltip for pin name visible on hover */}
+            <div className={`absolute ${isTop ? '-top-6' : '-bottom-6'} left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-0.5 rounded opacity-0 group-hover/pin:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50`}>
+              {portName}
+            </div>
+          </div>
+        );
+      })}
+
+      {/* For switches and routers, add explicit left/right handlers for aesthetic wiring */}
+      {['switch', 'router', 'firewall', 'hub'].includes(catalogEntry.type) && (
+        <>
+          <Handle type="source" position={Position.Left} id="left-link" className="!bg-slate-300 !w-3 !h-3 hover:!bg-blue-500 hover:!scale-125" />
+          <Handle type="source" position={Position.Right} id="right-link" className="!bg-slate-300 !w-3 !h-3 hover:!bg-blue-500 hover:!scale-125" />
+        </>
+      )}
+
       {/* Header / Graphic Area */}
-      <div className="flex flex-col items-center pt-4 pb-2">
+      <div className="flex flex-col items-center pt-4 pb-2 relative">
         <Icon size={32} className="mb-2" strokeWidth={1.5} />
         <span className="text-xs font-bold text-slate-800 text-center px-1 block truncate w-full">
           {data.name}
@@ -39,24 +64,13 @@ export default function DeviceNode({ data, selected, type }) {
       </div>
 
       {/* Info Area */}
-      <div className="px-2 text-center">
+      <div className="px-2 text-center min-h-[16px]">
         {data.ip && (
-          <div className="text-[9px] font-mono text-slate-500 bg-slate-100 rounded px-1 py-0.5 inline-block">
+          <div className="text-[9px] font-mono text-slate-600 bg-slate-100 border border-slate-200 rounded px-1 py-0.5 inline-block">
             {data.ip}
           </div>
         )}
       </div>
-
-      {/* Bottom Handles */}
-      <Handle type="source" position={Position.Bottom} id="bottom" className="!bg-slate-400 !w-3 !h-3 hover:!bg-blue-500 hover:!scale-125" />
-      
-      {/* Left/Right Handles for Routers/Switches to allow more connections visually */}
-      {(data.type === 'switch' || data.type === 'router') && (
-        <>
-          <Handle type="source" position={Position.Left} id="left" className="!bg-slate-400 !w-3 !h-3 hover:!bg-blue-500 hover:!scale-125" />
-          <Handle type="source" position={Position.Right} id="right" className="!bg-slate-400 !w-3 !h-3 hover:!bg-blue-500 hover:!scale-125" />
-        </>
-      )}
 
       {/* Ping Target Overlay (Simulation Mode) */}
       {data.isPingSource && (

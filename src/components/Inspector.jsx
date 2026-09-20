@@ -14,8 +14,8 @@ export default function Inspector({ node, onClose }) {
     }));
   };
 
-  const isHost = ['pc', 'server'].includes(node.data.type);
-  const isRouter = node.data.type === 'router';
+  const isHost = ['pc', 'server', 'laptop', 'printer', 'smartphone', 'web_server', 'db_server', 'dns_server', 'dhcp_server', 'iot_camera'].includes(node.data.type);
+  const isRouter = ['router', 'firewall', 'cloud_wan'].includes(node.data.type);
   
   return (
     <div className="absolute top-4 left-4 w-72 bg-white rounded-lg shadow-xl border border-slate-200 z-30 overflow-hidden flex flex-col">
@@ -81,6 +81,18 @@ export default function Inspector({ node, onClose }) {
              </p>
           </div>
         )}
+
+        <div className="pt-2 border-t border-slate-200">
+          <button
+            onClick={() => {
+              setNodes(nds => nds.filter(n => n.id !== node.id));
+              onClose();
+            }}
+            className="w-full py-2 px-3 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
+          >
+            Delete Component
+          </button>
+        </div>
       </div>
     </div>
   );
