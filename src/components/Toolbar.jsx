@@ -236,7 +236,15 @@ const PRESETS = {
   }
 };
 
-export default function Toolbar({ isSimulating, onSimulateToggle, wireColor, setWireColor, addLog }) {
+export default function Toolbar({ 
+  isSimulating, 
+  onSimulateToggle, 
+  wireColor, 
+  setWireColor, 
+  addLog,
+  isMobileDrawerOpen,
+  setIsMobileDrawerOpen
+}) {
   const { deleteElements, getNodes, getEdges, setNodes, setEdges, fitView } = useReactFlow();
   const [networkTitle, setNetworkTitle] = useState('Untitled Network');
   const [showExportMenu, setShowExportMenu] = useState(false);
@@ -476,62 +484,62 @@ export default function Toolbar({ isSimulating, onSimulateToggle, wireColor, set
   };
 
   return (
-    <div className="h-14 bg-white border-b border-slate-200 flex items-center justify-between px-4 shadow-sm z-30 relative select-none">
-      {/* Left: Branding */}
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-md bg-blue-600 flex items-center justify-center text-white font-bold shadow-sm">
+    <div className="min-h-[3.5rem] bg-white border-b border-slate-200 flex flex-wrap md:flex-nowrap items-center justify-between px-2 sm:px-4 py-1.5 shadow-sm z-30 relative select-none gap-2">
+      {/* Left: Branding & Title */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-md bg-blue-600 flex items-center justify-center text-white font-bold text-sm sm:text-base shadow-sm shrink-0">
           N
         </div>
         <input 
           type="text" 
           value={networkTitle}
           onChange={(e) => setNetworkTitle(e.target.value)}
-          className="text-lg font-semibold text-slate-800 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-blue-500 focus:ring-0 outline-none w-56 transition-all px-1 rounded"
+          className="text-sm sm:text-base md:text-lg font-semibold text-slate-800 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-blue-500 focus:ring-0 outline-none w-28 sm:w-44 md:w-56 transition-all px-1 rounded truncate"
         />
       </div>
 
       {/* Center: Tools */}
-      <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg border border-slate-200">
+      <div className="flex items-center gap-1 sm:gap-2 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs sm:text-sm shrink-0">
         <button 
-          className="p-1.5 text-slate-600 hover:text-slate-900 hover:bg-white rounded shadow-sm transition" 
+          className="p-1 sm:p-1.5 text-slate-600 hover:text-slate-900 hover:bg-white rounded shadow-sm transition" 
           title="Rotate Selected (Ctrl+R)"
           onClick={handleRotate}
         >
-          <RotateCw size={18} />
+          <RotateCw size={16} />
         </button>
         <button 
-          className="p-1.5 text-slate-600 hover:text-red-600 hover:bg-white rounded shadow-sm transition" 
+          className="p-1 sm:p-1.5 text-slate-600 hover:text-red-600 hover:bg-white rounded shadow-sm transition" 
           title="Delete Selected (Del)"
           onClick={handleDelete}
         >
-          <Trash2 size={18} />
+          <Trash2 size={16} />
         </button>
-        <div className="w-px h-6 bg-slate-300 mx-1"></div>
+        <div className="w-px h-5 bg-slate-300 mx-0.5 sm:mx-1"></div>
         <button 
-          className={`p-1.5 rounded shadow-sm transition ${
+          className={`p-1 sm:p-1.5 rounded shadow-sm transition ${
             canUndo ? 'text-slate-700 hover:text-slate-900 hover:bg-white cursor-pointer' : 'text-slate-300 cursor-not-allowed'
           }`}
           title="Undo (Ctrl+Z)"
           onClick={handleUndo}
           disabled={!canUndo}
         >
-          <Undo size={18} />
+          <Undo size={16} />
         </button>
         <button 
-          className={`p-1.5 rounded shadow-sm transition ${
+          className={`p-1 sm:p-1.5 rounded shadow-sm transition ${
             canRedo ? 'text-slate-700 hover:text-slate-900 hover:bg-white cursor-pointer' : 'text-slate-300 cursor-not-allowed'
           }`}
           title="Redo (Ctrl+Y)"
           onClick={handleRedo}
           disabled={!canRedo}
         >
-          <Redo size={18} />
+          <Redo size={16} />
         </button>
-        <div className="w-px h-6 bg-slate-300 mx-1"></div>
+        <div className="w-px h-5 bg-slate-300 mx-0.5 sm:mx-1"></div>
         
         {/* Wire Color Picker */}
         <select 
-          className="bg-transparent text-sm font-medium outline-none text-slate-700 ml-1 cursor-pointer"
+          className="bg-transparent text-xs sm:text-sm font-medium outline-none text-slate-700 cursor-pointer max-w-[85px] sm:max-w-none"
           value={wireColor}
           onChange={(e) => setWireColor(e.target.value)}
         >
@@ -543,8 +551,8 @@ export default function Toolbar({ isSimulating, onSimulateToggle, wireColor, set
         </select>
       </div>
 
-      {/* Right: Actions */}
-      <div className="flex items-center gap-3">
+      {/* Right: Actions & Simulation */}
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0 ml-auto md:ml-0">
         {/* Import JSON File Input */}
         <input 
           type="file" 
@@ -554,59 +562,60 @@ export default function Toolbar({ isSimulating, onSimulateToggle, wireColor, set
           className="hidden" 
         />
         <button 
-          className="text-sm font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1.5 px-2.5 py-1.5 rounded-md hover:bg-slate-100 transition"
+          className="text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1 px-2 py-1.5 rounded-md hover:bg-slate-100 transition"
           onClick={() => fileInputRef.current?.click()}
           title="Import JSON Topology File"
         >
-          <Upload size={16} /> Import
+          <Upload size={15} />
+          <span className="hidden sm:inline">Import</span>
         </button>
 
         {/* Export Dropdown Menu */}
         <div className="relative" ref={menuRef}>
           <button 
-            className="text-sm font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-md border border-slate-200 flex items-center gap-1.5 transition shadow-sm"
+            className="text-xs sm:text-sm font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-md border border-slate-200 flex items-center gap-1 transition shadow-sm"
             onClick={() => setShowExportMenu(!showExportMenu)}
             title="Export Topology"
           >
-            <Download size={16} />
-            <span>Export</span>
-            <ChevronDown size={14} className={`transition-transform duration-200 ${showExportMenu ? 'rotate-180' : ''}`} />
+            <Download size={15} />
+            <span className="hidden sm:inline">Export</span>
+            <ChevronDown size={13} className={`transition-transform duration-200 ${showExportMenu ? 'rotate-180' : ''}`} />
           </button>
 
           {showExportMenu && (
-            <div className="absolute right-0 mt-2 w-52 bg-white rounded-lg shadow-xl border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
+            <div className="absolute right-0 mt-2 w-48 sm:w-52 bg-white rounded-lg shadow-xl border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
               <button
-                className="w-full text-left px-3.5 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2.5 font-medium transition"
+                className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2 font-medium transition"
                 onClick={handleExportJson}
               >
-                <FileJson size={16} className="text-blue-500" />
+                <FileJson size={15} className="text-blue-500" />
                 <div>
                   <div className="font-semibold text-slate-800">Export JSON</div>
-                  <div className="text-[10px] text-slate-400">Save topology as JSON file</div>
+                  <div className="text-[10px] text-slate-400">Save topology file</div>
                 </div>
               </button>
               
               <div className="border-t border-slate-100 my-1"></div>
 
               <button
-                className="w-full text-left px-3.5 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2.5 font-medium transition"
+                className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2 font-medium transition"
                 onClick={handleExportPng}
               >
-                <Image size={16} className="text-emerald-500" />
+                <Image size={15} className="text-emerald-500" />
                 <div>
                   <div className="font-semibold text-slate-800">Export PNG Image</div>
-                  <div className="text-[10px] text-slate-400">Save high-res PNG screenshot</div>
+                  <div className="text-[10px] text-slate-400">Save screenshot</div>
                 </div>
               </button>
 
               <button
-                className="w-full text-left px-3.5 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2.5 font-medium transition"
+                className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2 font-medium transition"
                 onClick={handleExportSvg}
               >
-                <FileCode size={16} className="text-purple-500" />
+                <FileCode size={15} className="text-purple-500" />
                 <div>
                   <div className="font-semibold text-slate-800">Export SVG Vector</div>
-                  <div className="text-[10px] text-slate-400">Save scalable vector image</div>
+                  <div className="text-[10px] text-slate-400">Save vector image</div>
                 </div>
               </button>
             </div>
@@ -615,7 +624,7 @@ export default function Toolbar({ isSimulating, onSimulateToggle, wireColor, set
         
         {/* Presets Selector */}
         <select 
-          className="text-sm border border-slate-300 rounded-md px-2.5 py-1.5 bg-white text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+          className="text-xs sm:text-sm border border-slate-300 rounded-md px-1.5 sm:px-2.5 py-1.5 bg-white text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer max-w-[95px] sm:max-w-none"
           onChange={handleSelectPreset}
           defaultValue=""
         >
@@ -629,13 +638,13 @@ export default function Toolbar({ isSimulating, onSimulateToggle, wireColor, set
 
         {/* Simulation Toggle */}
         <button 
-          className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm transition-all ${
+          className={`flex items-center gap-1.5 px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm font-bold shadow-sm transition-all whitespace-nowrap ${
             isSimulating ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-emerald-500 hover:bg-emerald-600 text-white'
           }`}
           onClick={onSimulateToggle}
         >
-          {isSimulating ? <Square size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
-          {isSimulating ? 'Stop Simulation' : 'Start Simulation'}
+          {isSimulating ? <Square size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" />}
+          {isSimulating ? 'Stop' : 'Start Simulation'}
         </button>
       </div>
     </div>

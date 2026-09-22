@@ -22,7 +22,7 @@ export default function Inspector({ node, onClose }) {
   const isRouter = ['router', 'firewall', 'cloud', 'cloud_wan'].includes(node.data.type);
   
   return (
-    <div className="absolute top-4 left-4 w-72 bg-white rounded-lg shadow-xl border border-slate-200 z-30 overflow-hidden flex flex-col">
+    <div className="absolute top-3 left-2 right-2 md:right-auto md:left-4 md:top-4 w-auto md:w-72 max-w-sm mx-auto bg-white rounded-lg shadow-2xl border border-slate-200 z-30 overflow-hidden flex flex-col">
       <div className="bg-slate-800 text-white p-3 flex justify-between items-center">
         <h3 className="font-semibold text-sm flex items-center gap-2">
           <HardDrive size={16} /> Properties

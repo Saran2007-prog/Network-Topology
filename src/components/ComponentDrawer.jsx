@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { CATEGORIES, DEVICE_CATALOG } from '../utils/networkCatalogData';
 
-export default function ComponentDrawer() {
+export default function ComponentDrawer({ isOpenOnMobile, onCloseMobile }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [hoveredInfo, setHoveredInfo] = useState(null);
 
@@ -34,53 +34,80 @@ export default function ComponentDrawer() {
   );
 
   return (
-    <div className="w-72 bg-white border-l border-slate-200 flex flex-col shadow-[-4px_0_15px_rgba(0,0,0,0.03)] z-20 relative select-none">
-      
-      {/* Header & Search */}
-      <div className="p-4 border-b border-slate-200 bg-slate-50">
-        <h2 className="font-bold text-slate-800 text-lg">Components</h2>
-        <div className="relative mt-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-          <input 
-            type="text" 
-            placeholder="Search components..." 
-            className="w-full pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </div>
-      
-      {/* Scrollable Catalog List */}
-      <div 
-        className="flex-1 overflow-y-auto p-3 space-y-5"
-        onScroll={() => setHoveredInfo(null)}
-      >
-        {Object.values(CATEGORIES).map(category => {
-          const devicesInCategory = filteredDevices.filter(d => d.category === category);
-          
-          if (devicesInCategory.length === 0) return null;
+    <>
+      {/* Mobile Backdrop */}
+      {isOpenOnMobile && (
+        <div 
+          className="md:hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-30 transition-opacity"
+          onClick={onCloseMobile}
+        />
+      )}
 
-          return (
-            <div key={category}>
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-1">{category}</h3>
-              <div className="space-y-2">
-                {devicesInCategory.map((device) => {
-                  const Icon = device.icon;
-                  return (
-                    <div
-                      key={device.id}
-                      className="relative flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-lg cursor-grab hover:border-blue-400 hover:shadow-md transition-all active:cursor-grabbing group"
-                      draggable
-                      onDragStart={(e) => onDragStart(e, device.id)}
-                      onMouseEnter={(e) => handleMouseEnter(e, device)}
-                      onMouseLeave={handleMouseLeave}
-                      onClick={() => {
-                        if (window.onAddComponentFromCatalog) {
-                          window.onAddComponentFromCatalog(device.id);
-                        }
-                      }}
-                    >
+      <div className={`
+        bg-white border-l border-slate-200 flex flex-col shadow-[-4px_0_15px_rgba(0,0,0,0.03)] z-40 select-none transition-all duration-300
+        md:relative md:w-72 md:translate-x-0 md:static md:shadow-none
+        fixed inset-y-0 right-0 w-80 max-w-[85vw]
+        ${isOpenOnMobile ? 'translate-x-0 shadow-2xl' : 'translate-x-full md:translate-x-0'}
+      `}>
+        
+        {/* Header & Search */}
+        <div className="p-4 border-b border-slate-200 bg-slate-50">
+          <div className="flex items-center justify-between">
+            <h2 className="font-bold text-slate-800 text-lg">Components</h2>
+            {onCloseMobile && (
+              <button 
+                className="md:hidden p-1 text-slate-400 hover:text-slate-600 rounded-md"
+                onClick={onCloseMobile}
+              >
+                <X size={20} />
+              </button>
+            )}
+          </div>
+          <div className="relative mt-3">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+            <input 
+              type="text" 
+              placeholder="Search components..." 
+              className="w-full pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
+        
+        {/* Scrollable Catalog List */}
+        <div 
+          className="flex-1 overflow-y-auto p-3 space-y-5"
+          onScroll={() => setHoveredInfo(null)}
+        >
+          {Object.values(CATEGORIES).map(category => {
+            const devicesInCategory = filteredDevices.filter(d => d.category === category);
+            
+            if (devicesInCategory.length === 0) return null;
+
+            return (
+              <div key={category}>
+                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-1">{category}</h3>
+                <div className="space-y-2">
+                  {devicesInCategory.map((device) => {
+                    const Icon = device.icon;
+                    return (
+                      <div
+                        key={device.id}
+                        className="relative flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-lg cursor-grab hover:border-blue-400 hover:shadow-md active:bg-blue-50/50 transition-all active:cursor-grabbing group"
+                        draggable
+                        onDragStart={(e) => onDragStart(e, device.id)}
+                        onMouseEnter={(e) => handleMouseEnter(e, device)}
+                        onMouseLeave={handleMouseLeave}
+                        onClick={() => {
+                          if (window.onAddComponentFromCatalog) {
+                            window.onAddComponentFromCatalog(device.id);
+                          }
+                          if (onCloseMobile) {
+                            onCloseMobile();
+                          }
+                        }}
+                      >
                       <div className={`p-2 rounded-md ${device.color} group-hover:scale-105 transition-transform`}>
                         <Icon size={20} />
                       </div>
@@ -150,6 +177,7 @@ export default function ComponentDrawer() {
         </div>
       )}
     </div>
+    </>
   );
 }
 

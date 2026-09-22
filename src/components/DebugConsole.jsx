@@ -12,26 +12,26 @@ export default function DebugConsole({ logs, onClear }) {
   }, [logs, isOpen]);
 
   return (
-    <div className={`bg-slate-900 border-t border-slate-700 flex flex-col transition-all duration-300 ${isOpen ? 'h-48' : 'h-10'}`}>
+    <div className={`bg-slate-900 border-t border-slate-700 flex flex-col transition-all duration-300 ${isOpen ? 'h-36 sm:h-48' : 'h-9 sm:h-10'}`}>
       {/* Header */}
       <div 
-        className="h-10 px-4 flex items-center justify-between cursor-pointer hover:bg-slate-800"
+        className="h-9 sm:h-10 px-3 sm:px-4 flex items-center justify-between cursor-pointer hover:bg-slate-800"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="flex items-center gap-2 text-slate-300 font-semibold text-sm">
-          <Terminal size={16} className="text-blue-400" />
+        <div className="flex items-center gap-2 text-slate-300 font-semibold text-xs sm:text-sm">
+          <Terminal size={15} className="text-blue-400" />
           Serial Monitor
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button 
             className="text-slate-400 hover:text-white p-1"
             onClick={(e) => { e.stopPropagation(); onClear(); }}
             title="Clear Logs"
           >
-            <Trash2 size={16} />
+            <Trash2 size={15} />
           </button>
           <div className="text-slate-400">
-            {isOpen ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
+            {isOpen ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@ export default function DebugConsole({ logs, onClear }) {
       {isOpen && (
         <div 
           ref={scrollRef}
-          className="flex-1 overflow-y-auto p-4 bg-[#0d1117] font-mono text-sm leading-relaxed"
+          className="flex-1 overflow-y-auto p-2.5 sm:p-4 bg-[#0d1117] font-mono text-xs sm:text-sm leading-relaxed"
         >
           {logs.map((log, i) => {
             let color = 'text-slate-300';
