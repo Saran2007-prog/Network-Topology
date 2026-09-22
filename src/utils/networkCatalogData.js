@@ -20,7 +20,7 @@ export const DEVICE_CATALOG = [
     icon: Monitor,
     color: 'bg-blue-100 text-blue-700 border-blue-500',
     requiresIp: true,
-    ports: ['Eth0'],
+    ports: ['Eth0', 'Eth1'],
     osiLayer: 'Layer 7 (Application)',
     description: 'A standard general-purpose computing host.',
     forwardingLogic: 'Initiates and receives traffic. Uses ARP to find local MAC addresses or sends traffic to its Default Gateway for remote destinations.'
@@ -46,7 +46,7 @@ export const DEVICE_CATALOG = [
     icon: Smartphone,
     color: 'bg-blue-100 text-blue-700 border-blue-500',
     requiresIp: true,
-    ports: ['Wlan0'],
+    ports: ['Eth0', 'Wlan0'],
     osiLayer: 'Layer 7 (Application)',
     description: 'A wireless mobile client.',
     forwardingLogic: 'Communicates entirely over wireless frequencies to an Access Point.'
@@ -59,7 +59,7 @@ export const DEVICE_CATALOG = [
     icon: Printer,
     color: 'bg-slate-100 text-slate-700 border-slate-500',
     requiresIp: true,
-    ports: ['Eth0'],
+    ports: ['Eth0', 'Eth1'],
     osiLayer: 'Layer 7 (Application)',
     description: 'A shared office LAN endpoint for document printing.',
     forwardingLogic: 'Listens for incoming print jobs on specific TCP ports (like 9100 or IPP).'
@@ -72,7 +72,7 @@ export const DEVICE_CATALOG = [
     icon: Webcam,
     color: 'bg-teal-100 text-teal-700 border-teal-500',
     requiresIp: true,
-    ports: ['Wlan0'],
+    ports: ['Eth0', 'Wlan0'],
     osiLayer: 'Layer 7 (Application)',
     description: 'A lightweight IP device providing telemetry or video streams.',
     forwardingLogic: 'Streams UDP/TCP packets to a designated server.'
@@ -87,7 +87,7 @@ export const DEVICE_CATALOG = [
     icon: Server,
     color: 'bg-indigo-100 text-indigo-700 border-indigo-500',
     requiresIp: true,
-    ports: ['Eth0'],
+    ports: ['Eth0', 'Eth1'],
     osiLayer: 'Layer 7 (Application)',
     description: 'Hosts websites and responds to HTTP/HTTPS requests.',
     forwardingLogic: 'Listens on TCP Port 80/443. When it receives an HTTP GET, it replies with the requested web page data.'
@@ -100,7 +100,7 @@ export const DEVICE_CATALOG = [
     icon: Database,
     color: 'bg-indigo-100 text-indigo-700 border-indigo-500',
     requiresIp: true,
-    ports: ['Eth0'],
+    ports: ['Eth0', 'Eth1'],
     osiLayer: 'Layer 7 (Application)',
     description: 'Internal host for backend transactions and data storage.',
     forwardingLogic: 'Responds to query requests (e.g., SQL) typically from Web Servers on the same LAN.'
@@ -113,7 +113,7 @@ export const DEVICE_CATALOG = [
     icon: Globe,
     color: 'bg-purple-100 text-purple-700 border-purple-500',
     requiresIp: true,
-    ports: ['Eth0'],
+    ports: ['Eth0', 'Eth1'],
     osiLayer: 'Layer 7 (Application)',
     description: 'Resolves human-readable domain names (like example.com) into IP addresses.',
     forwardingLogic: 'Listens on UDP Port 53. Checks its zone records and returns the corresponding IP address.'
@@ -126,7 +126,7 @@ export const DEVICE_CATALOG = [
     icon: Network,
     color: 'bg-purple-100 text-purple-700 border-purple-500',
     requiresIp: true,
-    ports: ['Eth0'],
+    ports: ['Eth0', 'Eth1'],
     osiLayer: 'Layer 7 (Application)',
     description: 'Automatically assigns IP addresses to devices joining the network.',
     forwardingLogic: 'Listens for DHCP Discover broadcasts and replies with an IP lease (Offer/Ack).'

@@ -78,6 +78,161 @@ const PRESETS = {
       { id: 'e-swlan-client1', source: 'node_switch_lan', target: 'node_client1', type: 'wire', data: { color: '#22c55e' } },
       { id: 'e-swdmz-web', source: 'node_switch_dmz', target: 'node_web', type: 'wire', data: { color: '#3b82f6' } }
     ]
+  },
+  ring: {
+    title: 'Serverless P2P 3-Node Ring',
+    nodes: [
+      {
+        id: 'node_ring_a',
+        type: 'device',
+        position: { x: 380, y: 120 },
+        data: {
+          type: 'pc',
+          catalogId: 'pc',
+          name: 'Node_A',
+          ip: '10.0.0.1',
+          gateway: '',
+          subnet: '255.255.255.0',
+          osiLayer: 'Layer 7 (Application)'
+        }
+      },
+      {
+        id: 'node_ring_b',
+        type: 'device',
+        position: { x: 550, y: 320 },
+        data: {
+          type: 'laptop',
+          catalogId: 'laptop',
+          name: 'Node_B',
+          ip: '10.0.0.2',
+          gateway: '',
+          subnet: '255.255.255.0',
+          osiLayer: 'Layer 7 (Application)'
+        }
+      },
+      {
+        id: 'node_ring_c',
+        type: 'device',
+        position: { x: 210, y: 320 },
+        data: {
+          type: 'pc',
+          catalogId: 'pc',
+          name: 'Node_C',
+          ip: '10.0.0.3',
+          gateway: '',
+          subnet: '255.255.255.0',
+          osiLayer: 'Layer 7 (Application)'
+        }
+      }
+    ],
+    edges: [
+      { id: 'e-ring-a-b', source: 'node_ring_a', target: 'node_ring_b', type: 'wire', data: { color: '#22c55e' } },
+      { id: 'e-ring-b-c', source: 'node_ring_b', target: 'node_ring_c', type: 'wire', data: { color: '#3b82f6' } },
+      { id: 'e-ring-c-a', source: 'node_ring_c', target: 'node_ring_a', type: 'wire', data: { color: '#eab308' } }
+    ]
+  },
+  p2p_relay: {
+    title: 'P2P Multi-Hop Packet Forwarding',
+    nodes: [
+      {
+        id: 'node_relay_a',
+        type: 'device',
+        position: { x: 180, y: 220 },
+        data: {
+          type: 'pc',
+          catalogId: 'pc',
+          name: 'Source Node_A',
+          ip: '10.0.0.1',
+          gateway: '',
+          subnet: '255.255.255.0',
+          osiLayer: 'Layer 7 (Application)'
+        }
+      },
+      {
+        id: 'node_relay_b',
+        type: 'device',
+        position: { x: 420, y: 220 },
+        data: {
+          type: 'laptop',
+          catalogId: 'laptop',
+          name: 'Relay Node_B',
+          ip: '10.0.0.2',
+          gateway: '',
+          subnet: '255.255.255.0',
+          osiLayer: 'Layer 7 (Application)'
+        }
+      },
+      {
+        id: 'node_relay_c',
+        type: 'device',
+        position: { x: 660, y: 220 },
+        data: {
+          type: 'pc',
+          catalogId: 'pc',
+          name: 'Dest Node_C',
+          ip: '10.0.0.3',
+          gateway: '',
+          subnet: '255.255.255.0',
+          osiLayer: 'Layer 7 (Application)'
+        }
+      }
+    ],
+    edges: [
+      { id: 'e-relay-a-b', source: 'node_relay_a', target: 'node_relay_b', type: 'wire', data: { color: '#22c55e' } },
+      { id: 'e-relay-b-c', source: 'node_relay_b', target: 'node_relay_c', type: 'wire', data: { color: '#3b82f6' } }
+    ]
+  },
+  congestion_demo: {
+    title: 'Traffic Congestion & Dynamic Rerouting',
+    nodes: [
+      {
+        id: 'node_cong_a',
+        type: 'device',
+        position: { x: 380, y: 100 },
+        data: {
+          type: 'pc',
+          catalogId: 'pc',
+          name: 'Source Node_A',
+          ip: '10.0.0.1',
+          gateway: '',
+          subnet: '255.255.255.0',
+          osiLayer: 'Layer 7 (Application)'
+        }
+      },
+      {
+        id: 'node_cong_b',
+        type: 'device',
+        position: { x: 570, y: 280 },
+        data: {
+          type: 'laptop',
+          catalogId: 'laptop',
+          name: 'Alt Relay Node_B',
+          ip: '10.0.0.2',
+          gateway: '',
+          subnet: '255.255.255.0',
+          osiLayer: 'Layer 7 (Application)'
+        }
+      },
+      {
+        id: 'node_cong_c',
+        type: 'device',
+        position: { x: 190, y: 280 },
+        data: {
+          type: 'pc',
+          catalogId: 'pc',
+          name: 'Dest Node_C',
+          ip: '10.0.0.3',
+          gateway: '',
+          subnet: '255.255.255.0',
+          osiLayer: 'Layer 7 (Application)'
+        }
+      }
+    ],
+    edges: [
+      { id: 'e-cong-a-c', source: 'node_cong_a', target: 'node_cong_c', type: 'wire', data: { color: '#ef4444' } },
+      { id: 'e-cong-a-b', source: 'node_cong_a', target: 'node_cong_b', type: 'wire', data: { color: '#22c55e' } },
+      { id: 'e-cong-b-c', source: 'node_cong_b', target: 'node_cong_c', type: 'wire', data: { color: '#3b82f6' } }
+    ]
   }
 };
 
@@ -467,6 +622,9 @@ export default function Toolbar({ isSimulating, onSimulateToggle, wireColor, set
           <option value="" disabled>Load Preset...</option>
           <option value="lan">Simple LAN</option>
           <option value="router">Router Gateway Demo</option>
+          <option value="ring">Serverless P2P 3-Node Ring</option>
+          <option value="p2p_relay">P2P Multi-Hop Packet Forwarding</option>
+          <option value="congestion_demo">Traffic Congestion & Rerouting</option>
         </select>
 
         {/* Simulation Toggle */}

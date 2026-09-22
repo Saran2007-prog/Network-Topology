@@ -70,10 +70,37 @@ export default function AnimatedWire({
             strokeLinecap: 'round',
             strokeDasharray: '1 99', // creates a "dot" relative to path length
             strokeDashoffset: `${dashOffset}%`, 
-            filter: 'drop-shadow(0 0 4px rgba(59, 130, 246, 0.8))',
+            filter: 'drop-shadow(0 0 6px rgba(59, 130, 246, 0.9))',
             pointerEvents: 'none',
           }}
         />
+      )}
+
+      {/* Traffic Congestion / Busy Indicator Label */}
+      {data?.isBusy && (
+        <g transform={`translate(${labelX}, ${labelY})`} className="pointer-events-none z-30">
+          <rect 
+            x="-35" 
+            y="-10" 
+            width="70" 
+            height="20" 
+            rx="10" 
+            fill="#ef4444" 
+            className="animate-pulse"
+            style={{ filter: 'drop-shadow(0 2px 4px rgba(239, 68, 68, 0.4))' }}
+          />
+          <text 
+            x="0" 
+            y="3" 
+            textAnchor="middle" 
+            fill="#ffffff" 
+            fontSize="9" 
+            fontWeight="bold"
+            fontFamily="sans-serif"
+          >
+            🔥 BUSY
+          </text>
+        </g>
       )}
     </>
   );

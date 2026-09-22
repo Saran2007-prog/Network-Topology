@@ -44,6 +44,24 @@ export default function Workspace({
       };
     }
 
+    const isHostType = [
+      'pc', 'laptop', 'smartphone', 'printer', 'iot', 'iot_camera',
+      'web_server', 'db_server', 'dns_server', 'dhcp_server', 'server'
+    ].includes(type);
+
+    const isRouterType = ['router', 'firewall', 'cloud'].includes(type);
+
+    let defaultIp = '';
+    let defaultGateway = '';
+    let defaultSubnet = '255.255.255.0';
+
+    if (isHostType) {
+      defaultIp = `192.168.1.${10 + nodes.length}`;
+      defaultGateway = '192.168.1.1';
+    } else if (isRouterType) {
+      defaultIp = '192.168.1.1';
+    }
+
     const newNode = {
       id: getId(),
       type: 'device',
@@ -51,9 +69,9 @@ export default function Workspace({
       data: { 
         type, 
         name: `${type.toUpperCase()}_${nodes.length + 1}`,
-        ip: ['pc', 'server', 'laptop', 'printer'].includes(type) ? `192.168.1.${10 + nodes.length}` : '',
-        gateway: ['pc', 'server', 'laptop', 'printer'].includes(type) ? '192.168.1.1' : '',
-        subnet: '255.255.255.0',
+        ip: defaultIp,
+        gateway: defaultGateway,
+        subnet: defaultSubnet,
         isPingSource: false,
         pingResult: null,
         isSimulating: isSimulating
@@ -61,7 +79,7 @@ export default function Workspace({
     };
 
     setNodes((nds) => nds.concat(newNode));
-    addLog(`Added component: ${type.toUpperCase()}_${nodes.length + 1}`, 'info');
+    addLog(`Added component: ${type.toUpperCase()}_${nodes.length + 1} (${defaultIp ? 'IP: ' + defaultIp : 'Layer 2'})`, 'info');
   }, [nodes, setNodes, isSimulating, addLog]);
 
   // Expose click-to-add for catalog items

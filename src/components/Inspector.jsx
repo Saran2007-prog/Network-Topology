@@ -14,8 +14,12 @@ export default function Inspector({ node, onClose }) {
     }));
   };
 
-  const isHost = ['pc', 'server', 'laptop', 'printer', 'smartphone', 'web_server', 'db_server', 'dns_server', 'dhcp_server', 'iot_camera'].includes(node.data.type);
-  const isRouter = ['router', 'firewall', 'cloud_wan'].includes(node.data.type);
+  const isHost = [
+    'pc', 'server', 'laptop', 'printer', 'smartphone', 'iot', 'iot_camera',
+    'web_server', 'db_server', 'dns_server', 'dhcp_server'
+  ].includes(node.data.type);
+
+  const isRouter = ['router', 'firewall', 'cloud', 'cloud_wan'].includes(node.data.type);
   
   return (
     <div className="absolute top-4 left-4 w-72 bg-white rounded-lg shadow-xl border border-slate-200 z-30 overflow-hidden flex flex-col">

@@ -47,13 +47,9 @@ export default function DeviceNode({ data, selected }) {
         );
       })}
 
-      {/* For switches and routers, add explicit left/right handlers for aesthetic wiring */}
-      {['switch', 'router', 'firewall', 'hub'].includes(catalogEntry.type) && (
-        <>
-          <Handle type="source" position={Position.Left} id="left-link" className="!bg-slate-300 !w-3 !h-3 hover:!bg-blue-500 hover:!scale-125" />
-          <Handle type="source" position={Position.Right} id="right-link" className="!bg-slate-300 !w-3 !h-3 hover:!bg-blue-500 hover:!scale-125" />
-        </>
-      )}
+      {/* Explicit left/right handlers for aesthetic wiring on all devices */}
+      <Handle type="source" position={Position.Left} id="left-link" className="!bg-slate-300 !w-3 !h-3 hover:!bg-blue-500 hover:!scale-125" />
+      <Handle type="source" position={Position.Right} id="right-link" className="!bg-slate-300 !w-3 !h-3 hover:!bg-blue-500 hover:!scale-125" />
 
       {/* Header / Graphic Area */}
       <div className="flex flex-col items-center pt-4 pb-2 relative">
@@ -85,6 +81,13 @@ export default function DeviceNode({ data, selected }) {
       )}
       {data.pingResult === 'fail' && (
         <div className="absolute inset-0 border-4 border-red-500 rounded-lg pointer-events-none animate-pulse opacity-75"></div>
+      )}
+      {data.pingResult === 'relay' && (
+        <div className="absolute inset-0 border-4 border-amber-500 rounded-lg pointer-events-none animate-pulse opacity-90 z-40">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md flex items-center gap-1 whitespace-nowrap">
+            🔁 Forwarding Packet
+          </div>
+        </div>
       )}
     </div>
   );
